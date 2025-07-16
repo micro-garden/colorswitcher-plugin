@@ -1,0 +1,22 @@
+# Color Switcher Plugin for Micro
+
+`Color Switcher` is a plugin for the micro editor that allows you to easily
+switch between color schemes using keyboard shortcuts or commands.
+
+## Installation
+
+Place the plugin folder in `~/.config/micro/plug/colorswitcher/`, or clone it
+directly from the GitHub repository:
+
+```sh
+mkdir -p ~/.config/micro/plug
+git clone https://github.com/akikareha/micro-colorswitcher-plugin ~/.config/micro/plug/colorswitcher
+```
+
+## License
+
+MIT.
+
+## Author
+
+Aki Kareha (aki@kareha.org)

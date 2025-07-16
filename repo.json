@@ -1,0 +1,16 @@
+[{
+	"Name": "colorswitcher",
+	"Description": "Easily cycle through micro color schemes using keyboard shortcuts or commands.",
+	"Author": "Aki Kareha",
+	"Tags": ["color", "colorscheme"],
+	"Website": "https://github.com/akikareha/micro-colorswitcher-plugin",
+	"Versions": [
+		{
+			"Version": "0.0.0",
+			"Url": "https://github.com/akikareha/micro-colorswitcher-plugin/archive/v0.0.0.zip",
+			"Require": {
+				"micro": ">=2.0.0"
+			}
+		}
+	]
+}]
