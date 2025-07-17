@@ -37,6 +37,8 @@ difficult to type.
 
 ## Limitations
 
-- Currently, only built-in color schemes are recognized.
-- The list of schemes is currently hardcoded, but future versions may support
-  auto-discovery.
+- Only built-in color schemes and those located in
+  `~/.config/micro/colorschemes/` are recognized.
+- Color schemes provided by other plugins are not included in the cycling list.
+- The list of built-in color schemes is hardcoded and does not support
+  automatic discovery.
