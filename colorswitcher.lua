@@ -3,6 +3,7 @@ VERSION = "0.0.0"
 math.randomseed(os.time())
 
 local config = import("micro/config")
+local shell = import("micro/shell")
 local micro = import("micro")
 
 local builtin = {
@@ -33,49 +34,35 @@ local builtin = {
 	"zenburn",
 }
 
-function detectListCommand()
-	local handle = io.popen("ls /tmp 2>/dev/null")
-	if handle then
-		local ok = handle:read("*l")
-		handle:close()
-		if ok then
-			return "ls -1 '%s'*.micro 2>/dev/null"
+function extractNames(lines)
+	local list = {}
+	for line in lines:gmatch("[^\r\n]+") do
+		local name = line:match("([^/\\]+)%.micro$")
+		if name then
+			table.insert(list, name)
 		end
 	end
-
-	handle = io.popen("dir /b 2>nul")
-	if handle then
-		local ok = handle:read("*l")
-		handle:close()
-		if ok then
-			return 'dir /b "%s\\*.micro" 2>nul'
-		end
-	end
-
-	return nil
+	return list
 end
 
 function getAvailableColorSchemes()
-	local listcmd = detectListCommand()
-	if not listcmd then
-		micro.InfoBar():Error("Could not detect listing command (ls or dir)")
-		return {}
+	local dir = config.ConfigDir .. "/colorschemes"
+
+	-- Try Unix-style ls
+	local out, err = shell.ExecCommand("ls", "-1", dir)
+	if out and out ~= "" then
+		return extractNames(out)
 	end
 
-	local dir = config.ConfigDir .. "/colorschemes/"
-	local handle = io.popen(string.format(listcmd, dir))
-	local schemes = {}
-	if handle then
-		for line in handle:lines() do
-			local name = string.match(line, "([^/\\]+)%.micro$")
-			if name then
-				table.insert(schemes, name)
-			end
-		end
-		handle:close()
+	-- Try Windows-style dir via cmd
+	out, err = shell.ExecCommand("cmd", "/C", "dir", "/b", dir .. "\\*.micro")
+	if out and out ~= "" then
+		return extractNames(out)
 	end
-	table.sort(schemes)
-	return schemes
+
+	-- If both methods fail
+	micro.InfoBar():Error("Unable to list color schemes.")
+	return {}
 end
 
 function mergeColorSchemes()
