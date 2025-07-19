@@ -2,9 +2,9 @@ VERSION = "0.0.0"
 
 math.randomseed(os.time())
 
+local micro = import("micro")
 local config = import("micro/config")
 local shell = import("micro/shell")
-local micro = import("micro")
 
 local builtin = {
 	"atom-dark",
@@ -34,7 +34,7 @@ local builtin = {
 	"zenburn",
 }
 
-function extractNames(lines)
+local function extract_names(lines)
 	local list = {}
 	for line in lines:gmatch("[^\r\n]+") do
 		local name = line:match("([^/\\]+)%.micro$")
@@ -45,19 +45,19 @@ function extractNames(lines)
 	return list
 end
 
-function getAvailableColorSchemes()
+local function get_available_color_schemes()
 	local dir = config.ConfigDir .. "/colorschemes"
 
 	-- Try Unix-style ls
 	local out, err = shell.ExecCommand("ls", "-1", dir)
 	if out and out ~= "" then
-		return extractNames(out)
+		return extract_names(out)
 	end
 
 	-- Try Windows-style dir via cmd
 	out, err = shell.ExecCommand("cmd", "/C", "dir", "/b", dir .. "\\*.micro")
 	if out and out ~= "" then
-		return extractNames(out)
+		return extract_names(out)
 	end
 
 	-- If both methods fail
@@ -65,8 +65,8 @@ function getAvailableColorSchemes()
 	return {}
 end
 
-function mergeColorSchemes()
-	local merged = getAvailableColorSchemes()
+local function merge_color_schemes()
+	local merged = get_available_color_schemes()
 
 	for _, b in ipairs(builtin) do
 		table.insert(merged, b)
@@ -85,9 +85,9 @@ function mergeColorSchemes()
 	return unique
 end
 
-local colors = mergeColorSchemes()
+local colors = merge_color_schemes()
 
-function indexOf(tbl, value)
+local function index_of(tbl, value)
 	for i, v in ipairs(tbl) do
 		if v == value then
 			return i
@@ -96,9 +96,9 @@ function indexOf(tbl, value)
 	return 0
 end
 
-local current = indexOf(colors, config.GetGlobalOption("colorscheme"))
+local current = index_of(colors, config.GetGlobalOption("colorscheme"))
 
-function applyColorScheme()
+local function apply_color_scheme()
 	config.SetGlobalOption("colorscheme", colors[current])
 	micro.InfoBar():Message("Color scheme set to: " .. colors[current])
 end
@@ -108,7 +108,7 @@ function nextColorScheme(bp)
 	if current > #colors then
 		current = 1
 	end
-	applyColorScheme()
+	apply_color_scheme()
 end
 
 function prevColorScheme(bp)
@@ -116,7 +116,7 @@ function prevColorScheme(bp)
 	if current < 1 then
 		current = #colors
 	end
-	applyColorScheme()
+	apply_color_scheme()
 end
 
 function randomColorScheme(bp)
@@ -124,7 +124,7 @@ function randomColorScheme(bp)
 	repeat
 		current = math.random(1, #colors)
 	until current ~= old
-	applyColorScheme()
+	apply_color_scheme()
 end
 
 function init()
