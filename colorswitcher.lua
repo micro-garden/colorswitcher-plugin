@@ -1,4 +1,4 @@
-VERSION = "0.0.0"
+VERSION = "0.0.1"
 
 math.randomseed(os.time())
 
@@ -49,19 +49,29 @@ local function get_available_color_schemes()
 	local dir = config.ConfigDir .. "/colorschemes"
 
 	-- Try Unix-style ls
-	local out, err = shell.ExecCommand("ls", "-1", dir)
-	if out and out ~= "" then
-		return extract_names(out)
+	local out, err = shell.ExecCommand("ls", "/tmp")
+	if err == nil then
+		local out, err = shell.ExecCommand("ls", "-1", dir)
+		if err or out == nil or out == "" then
+			return {}
+		else
+			return extract_names(out)
+		end
 	end
 
 	-- Try Windows-style dir via cmd
-	out, err = shell.ExecCommand("cmd", "/C", "dir", "/b", dir .. "\\*.micro")
-	if out and out ~= "" then
-		return extract_names(out)
+	local out, err = shell.ExecCommand("cmd", "/C", "dir")
+	if err == nil then
+		local out, err = shell.ExecCommand("cmd", "/C", "dir", "/b", dir .. "\\*.micro")
+		if err or out == nil or out == "" then
+			return {}
+		else
+			return extract_names(out)
+		end
 	end
 
 	-- If both methods fail
-	micro.InfoBar():Error("Unable to list color schemes.")
+	--micro.InfoBar():Error("Unable to list color schemes.")
 	return {}
 end
 
