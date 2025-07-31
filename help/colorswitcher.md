@@ -1,7 +1,7 @@
 # Color Switcher Plugin
 
-**Color Switcher** is a plugin for the micro editor that allows you to easily
-switch between color schemes using keyboard shortcuts or commands.
+**Color Switcher** is a plugin that allows you to easily switch between color
+schemes using keyboard shortcuts or commands.
 
 ## Features
 
