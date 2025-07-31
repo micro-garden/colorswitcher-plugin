@@ -4,6 +4,8 @@
 [micro](https://github.com/zyedidia/micro) editor that allows you to easily
 switch between color schemes using keyboard shortcuts or commands.
 
+See [help/colorswitcher.md](help/colorswitcher.md) for more details.
+
 ## Installation
 
 Place the plugin folder in `~/.config/micro/plug/colorswitcher/`, or clone it
