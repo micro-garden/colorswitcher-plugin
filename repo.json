@@ -4,6 +4,7 @@
 	"Author": "Aki Kareha",
 	"Tags": ["color", "colorscheme"],
 	"Website": "https://github.com/akikareha/micro-colorswitcher-plugin",
+	"License": "MIT",
 	"Versions": [
 		{
 			"Version": "0.0.1",
