@@ -1,4 +1,4 @@
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 math.randomseed(os.time())
 
@@ -31,44 +31,44 @@ end
 
 local current = "default"
 
-local function apply_color_scheme()
+local function apply_colorscheme()
 	config.SetGlobalOption("colorscheme", colors[current])
-	micro.InfoBar():Message("Color scheme set to: " .. colors[current])
+	micro.InfoBar():Message("Colorscheme set to: " .. colors[current])
 end
 
-function nextColorScheme(bp)
+function NextColorschemeCmd(bp)
 	current = current + 1
 	if current > #colors then
 		current = 1
 	end
-	apply_color_scheme()
+	apply_colorscheme()
 end
 
-function prevColorScheme(bp)
+function PrevColorschemeCmd(bp)
 	current = current - 1
 	if current < 1 then
 		current = #colors
 	end
-	apply_color_scheme()
+	apply_colorscheme()
 end
 
-function randomColorScheme(bp)
+function RandColorschemeCmd(bp)
 	local old = current
 	repeat
 		current = math.random(1, #colors)
 	until current ~= old
-	apply_color_scheme()
+	apply_colorscheme()
 end
 
 function init()
 	colors = get_colorschemes()
 	current = index_of(colors, config.GetGlobalOption("colorscheme"))
 
-	config.MakeCommand("nextcolorscheme", nextColorScheme, config.NoComplete)
-	config.MakeCommand("prevcolorscheme", prevColorScheme, config.NoComplete)
-	config.MakeCommand("randcolorscheme", randomColorScheme, config.NoComplete)
-	config.TryBindKey("Ctrl-Alt-j", "lua:colorswitcher.nextColorScheme", false)
-	config.TryBindKey("Ctrl-Alt-k", "lua:colorswitcher.prevColorScheme", false)
-	config.TryBindKey("Ctrl-Alt-r", "lua:colorswitcher.randomColorScheme", false)
+	config.MakeCommand("nextcolorscheme", NextColorschemeCmd, config.NoComplete)
+	config.MakeCommand("prevcolorscheme", PrevColorschemeCmd, config.NoComplete)
+	config.MakeCommand("randcolorscheme", RandColorschemeCmd, config.NoComplete)
+	config.TryBindKey("Ctrl-Alt-j", "lua:colorswitcher.NextColorschemeCmd", false)
+	config.TryBindKey("Ctrl-Alt-k", "lua:colorswitcher.PrevColorschemeCmd", false)
+	config.TryBindKey("Ctrl-Alt-r", "lua:colorswitcher.RandColorschemeCmd", false)
 	config.AddRuntimeFile("colorswitcher", config.RTHelp, "help/colorswitcher.md")
 end
