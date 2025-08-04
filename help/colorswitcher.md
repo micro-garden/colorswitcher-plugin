@@ -34,11 +34,3 @@ You can also use commands directly:
 
 These can be useful in case your keyboard layout makes certain keybindings
 difficult to type.
-
-## Limitations
-
-- Only built-in color schemes and those located in
-  `~/.config/micro/colorschemes/` are recognized.
-- Color schemes provided by other plugins are not included in the cycling list.
-- The list of built-in color schemes is hardcoded and does not support
-  automatic discovery.

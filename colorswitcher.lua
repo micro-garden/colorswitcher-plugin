@@ -1,101 +1,24 @@
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 math.randomseed(os.time())
 
 local micro = import("micro")
 local config = import("micro/config")
-local shell = import("micro/shell")
 
-local builtin = {
-	"atom-dark",
-	"bubblegum",
-	"cmc-16",
-	"cmc-tc",
-	"darcula",
-	"default",
-	"dracula-tc",
-	"dukedark-tc",
-	"dukelight-tc",
-	"dukeubuntu-tc",
-	"geany",
-	"gotham",
-	"gruvbox",
-	"gruvbox-tc",
-	"material-tc",
-	"monokai",
-	"monokai-dark",
-	"one-dark",
-	"railscast",
-	"simple",
-	"solarized",
-	"solarized-tc",
-	"sunny-day",
-	"twilight",
-	"zenburn",
-}
-
-local function extract_names(lines)
-	local list = {}
-	for line in lines:gmatch("[^\r\n]+") do
-		local name = line:match("([^/\\]+)%.micro$")
-		if name then
-			table.insert(list, name)
-		end
+local function convert_userdata_array_to_table(ud)
+	local result = {}
+	for i = 1, #ud do
+		result[i] = ud[i]
 	end
-	return list
+	return result
 end
 
-local function get_available_color_schemes()
-	local dir = config.ConfigDir .. "/colorschemes"
-
-	-- Try Unix-style ls
-	local out, err = shell.ExecCommand("ls", "/tmp")
-	if err == nil then
-		local out, err = shell.ExecCommand("ls", "-1", dir)
-		if err or out == nil or out == "" then
-			return {}
-		else
-			return extract_names(out)
-		end
-	end
-
-	-- Try Windows-style dir via cmd
-	local out, err = shell.ExecCommand("cmd", "/C", "dir")
-	if err == nil then
-		local out, err = shell.ExecCommand("cmd", "/C", "dir", "/b", dir .. "\\*.micro")
-		if err or out == nil or out == "" then
-			return {}
-		else
-			return extract_names(out)
-		end
-	end
-
-	-- If both methods fail
-	--micro.InfoBar():Error("Unable to list color schemes.")
-	return {}
+local function get_colorschemes()
+	local raw = config.ListRuntimeFiles(config.RTColorscheme)
+	return convert_userdata_array_to_table(raw)
 end
 
-local function merge_color_schemes()
-	local merged = get_available_color_schemes()
-
-	for _, b in ipairs(builtin) do
-		table.insert(merged, b)
-	end
-
-	local seen = {}
-	local unique = {}
-	for _, name in ipairs(merged) do
-		if not seen[name] then
-			seen[name] = true
-			table.insert(unique, name)
-		end
-	end
-
-	table.sort(unique)
-	return unique
-end
-
-local colors = merge_color_schemes()
+local colors = {}
 
 local function index_of(tbl, value)
 	for i, v in ipairs(tbl) do
@@ -106,7 +29,7 @@ local function index_of(tbl, value)
 	return 0
 end
 
-local current = index_of(colors, config.GetGlobalOption("colorscheme"))
+local current = "default"
 
 local function apply_color_scheme()
 	config.SetGlobalOption("colorscheme", colors[current])
@@ -138,6 +61,9 @@ function randomColorScheme(bp)
 end
 
 function init()
+	colors = get_colorschemes()
+	current = index_of(colors, config.GetGlobalOption("colorscheme"))
+
 	config.MakeCommand("nextcolorscheme", nextColorScheme, config.NoComplete)
 	config.MakeCommand("prevcolorscheme", prevColorScheme, config.NoComplete)
 	config.MakeCommand("randcolorscheme", randomColorScheme, config.NoComplete)
