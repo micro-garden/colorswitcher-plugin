@@ -1,4 +1,4 @@
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 math.randomseed(os.time())
 
@@ -36,7 +36,7 @@ local function apply_colorscheme()
 	micro.InfoBar():Message("Colorscheme set to: " .. colors[current])
 end
 
-function NextColorschemeCmd(bp)
+function NextColorscheme(bp)
 	current = current + 1
 	if current > #colors then
 		current = 1
@@ -44,7 +44,7 @@ function NextColorschemeCmd(bp)
 	apply_colorscheme()
 end
 
-function PrevColorschemeCmd(bp)
+function PrevColorscheme(bp)
 	current = current - 1
 	if current < 1 then
 		current = #colors
@@ -52,7 +52,7 @@ function PrevColorschemeCmd(bp)
 	apply_colorscheme()
 end
 
-function RandColorschemeCmd(bp)
+function RandColorscheme(bp)
 	local old = current
 	repeat
 		current = math.random(1, #colors)
@@ -64,11 +64,11 @@ function init()
 	colors = get_colorschemes()
 	current = index_of(colors, config.GetGlobalOption("colorscheme"))
 
-	config.MakeCommand("nextcolorscheme", NextColorschemeCmd, config.NoComplete)
-	config.MakeCommand("prevcolorscheme", PrevColorschemeCmd, config.NoComplete)
-	config.MakeCommand("randcolorscheme", RandColorschemeCmd, config.NoComplete)
-	config.TryBindKey("Ctrl-Alt-j", "lua:colorswitcher.NextColorschemeCmd", false)
-	config.TryBindKey("Ctrl-Alt-k", "lua:colorswitcher.PrevColorschemeCmd", false)
-	config.TryBindKey("Ctrl-Alt-r", "lua:colorswitcher.RandColorschemeCmd", false)
+	config.MakeCommand("nextcolorscheme", NextColorscheme, config.NoComplete)
+	config.MakeCommand("prevcolorscheme", PrevColorscheme, config.NoComplete)
+	config.MakeCommand("randcolorscheme", RandColorscheme, config.NoComplete)
+	config.TryBindKey("Ctrl-Alt-j", "lua:colorswitcher.NextColorscheme", false)
+	config.TryBindKey("Ctrl-Alt-k", "lua:colorswitcher.PrevColorscheme", false)
+	config.TryBindKey("Ctrl-Alt-r", "lua:colorswitcher.RandColorscheme", false)
 	config.AddRuntimeFile("colorswitcher", config.RTHelp, "help/colorswitcher.md")
 end
