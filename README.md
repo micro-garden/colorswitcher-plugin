@@ -13,12 +13,12 @@ directly from the GitHub repository:
 
 ```sh
 mkdir -p ~/.config/micro/plug
-git clone https://github.com/akikareha/micro-colorswitcher-plugin ~/.config/micro/plug/colorswitcher
+git clone https://github.com/micro-garden/colorswitcher-plugin ~/.config/micro/plug/colorswitcher
 ```
 
 Alternatively, this plugin is also available through the unofficial plugin
 channel:  
-https://github.com/akikareha/micro-unofficial-plugin-channel  
+https://github.com/micro-garden/unofficial-plugin-channel  
 You can install it by adding the channel and then using `plugin install`.
 
 ## License
